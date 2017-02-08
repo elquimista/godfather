@@ -1,0 +1,12 @@
+// noty type classes
+.noty_bar {
+  &.noty_type_alert {
+    background-color: $red;
+    color: $white;
+  }
+
+  &.noty_type_notice {
+    background-color: $teal;
+    color: $white;
+  }
+}

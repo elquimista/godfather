@@ -1,0 +1,33 @@
+// margins, paddings
+// Uses `--` to avoid conflict with bootstrap
+@for $i from 0 through 150 {
+  .m--#{$i}  { margin: $i * 1px !important; }
+  .mt--#{$i} { margin-top: $i * 1px !important; }
+  .mr--#{$i} { margin-right: $i * 1px !important; }
+  .mb--#{$i} { margin-bottom: $i * 1px !important; }
+  .ml--#{$i} { margin-left: $i * 1px !important; }
+  .mx--#{$i} { margin-left: $i * 1px !important;
+               margin-right: $i * 1px !important; }
+  .my--#{$i} { margin-top: $i * 1px !important;
+               margin-bottom: $i * 1px !important; }
+
+  .mn--#{$i}  { margin: -$i * 1px !important; }
+  .mnt--#{$i} { margin-top: -$i * 1px !important; }
+  .mnr--#{$i} { margin-right: -$i * 1px !important; }
+  .mnb--#{$i} { margin-bottom: -$i * 1px !important; }
+  .mnl--#{$i} { margin-left: -$i * 1px !important; }
+  .mnx--#{$i} { margin-left: -$i * 1px !important;
+                margin-right: -$i * 1px !important; }
+  .mny--#{$i} { margin-top: -$i * 1px !important;
+                margin-bottom: -$i * 1px !important; }
+
+  .p--#{$i}  { padding: $i * 1px !important; }
+  .pt--#{$i} { padding-top: $i * 1px !important; }
+  .pr--#{$i} { padding-right: $i * 1px !important; }
+  .pb--#{$i} { padding-bottom: $i * 1px !important; }
+  .pl--#{$i} { padding-left: $i * 1px !important; }
+  .px--#{$i} { padding-left: $i * 1px !important;
+               padding-right: $i * 1px !important; }
+  .py--#{$i} { padding-top: $i * 1px !important;
+               padding-bottom: $i * 1px !important; }
+}

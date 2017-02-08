@@ -1,0 +1,51 @@
+{
+  "name": "godfather-webpack-app",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": "7.2.1",
+    "npm": "3.10.10"
+  },
+  "scripts": {
+    "build:test": "node_modules/.bin/webpack --config webpack.config.js",
+    "build:production": "NODE_ENV=production node_modules/.bin/webpack --config webpack.config.js",
+    "build:development": "webpack-dashboard -- node_modules/.bin/webpack -w --config webpack.config.js"
+  },
+  "cacheDirectories": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "animate.css": "^3.5.2",
+    "babel": "^6.5.2",
+    "babel-cli": "^6.22.2",
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-polyfill": "^6.22.0",
+    "babel-preset-latest": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "babel-runtime": "^6.22.0",
+    "bootstrap": "^4.0.0-alpha.6",
+    "css-loader": "^0.26.1",
+    "deep-assign": "^2.0.0",
+    "es5-shim": "^4.5.9",
+    "expose-loader": "^0.7.1",
+    "extract-text-webpack-plugin": "^2.0.0-rc.2",
+    "imports-loader": "^0.7.0",
+    "jquery": "^3.1.1",
+    "jquery-ujs": "^1.2.2",
+    "node-sass": "^4.4.0",
+    "noty": "^2.4.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-on-rails": "^6.4.2",
+    "react-tap-event-plugin": "^2.0.1",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1",
+    "uuid": "^3.0.1",
+    "webpack": "^2.2.0"
+  },
+  "devDependencies": {
+    "webpack-dashboard": "^0.2.1"
+  }
+}

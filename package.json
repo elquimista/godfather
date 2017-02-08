@@ -1,0 +1,22 @@
+{
+  "name": "godfather",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": "7.2.1",
+    "npm": "3.10.10"
+  },
+  "cacheDirectories": [
+    "node_modules",
+    "app/assets/webpack/node_modules"
+  ],
+  "scripts": {
+    "postinstall": "cd app/assets/webpack && npm i",
+    "start": "foreman start",
+    "build": "sh -c 'rm app/assets/webpack/dist/* || true && foreman run bin/rails assets:precompile'",
+    "start:dev": "foreman start -f Procfile.dev",
+    "build:dev": "sh -c 'rm app/assets/webpack/dist/* || true && cd app/assets/webpack && npm run build:development'",
+    "rails": "foreman run bin/rails",
+    "test": "foreman run bin/rails test"
+  }
+}

@@ -1,0 +1,5 @@
+# Rename this file to '.env' before starting the app.
+
+RAILS_ENV=
+PORT=
+SECRET_KEY_BASE=
