@@ -10,6 +10,7 @@
 //  It is generally better to create a new file per style scope.
 
 // = require animate.css/animate.css
+// = require orgchart/dist/css/jquery.orgchart.css
 // = require components
 // = require_self
 
@@ -20,4 +21,4 @@
 @import "utilities";
 @import "base";
 @import "common";
-// @import "sections/**/*";
+@import "sections/**/*";

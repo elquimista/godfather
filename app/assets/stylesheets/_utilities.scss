@@ -31,3 +31,7 @@
   .py--#{$i} { padding-top: $i * 1px !important;
                padding-bottom: $i * 1px !important; }
 }
+
+// position classes
+.pos-relative { position: relative !important; }
+.pos-absolute { position: absolute !important; }

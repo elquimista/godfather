@@ -24,6 +24,7 @@ const config = {
       'jquery-ujs',
       'bootstrap',
       'jquery-form/jquery.form',
+      'orgchart',
     ],
     app: [
       './src/app',

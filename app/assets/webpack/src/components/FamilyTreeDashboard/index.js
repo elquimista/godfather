@@ -2,6 +2,7 @@
 
 import React from 'react';
 import PeopleList from 'components/PeopleList';
+import FamilyTree from 'components/FamilyTree';
 
 export default class FamilyTreeDashboard extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ export default class FamilyTreeDashboard extends React.Component {
           <PeopleList people={people} />
         </div>
         <div className="col-22">
+          <FamilyTree />
         </div>
       </div>
     );
