@@ -35,3 +35,7 @@
 // position classes
 .pos-relative { position: relative !important; }
 .pos-absolute { position: absolute !important; }
+
+// visibility classes
+.transparent  { opacity: 0 !important; }
+.opaque       { opacity: 1 !important; }

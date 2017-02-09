@@ -1,8 +1,15 @@
 'use strict';
 
 import React from 'react';
+import uuid from 'uuid';
 
-const defaultInnerHtml = '<img src="http://placehold.it/118x128">';
+const defaultInnerHtml =
+  '<img class="avatar" src="http://placehold.it/118x128" width="118" height="128">' +
+  '<div class="overlay pos-absolute w-100 h-100 transparent">' +
+    '<div class="pos-absolute w-100 h-100" style="left: 0; top: 0; background-color: black; opacity: .7;"></div>' +
+    '<p class="info pos-absolute w-100 p-1" style="line-height: 23px;"></p>' +
+  '</div>'
+  ;
 
 export default class FamilyTree extends React.Component {
   constructor(props) {
@@ -22,7 +29,7 @@ export default class FamilyTree extends React.Component {
           id: 'consigliere_node', innerHtml: defaultInnerHtml, title: 'Consigliere'
         }]
       },
-      chartClass: 'family-tree-chart w-100 mt-2 pos-relative',
+      chartClass: 'family-tree-chart w-100 mt-2 pos-relative pt-0',
       nodeTitle: 'innerHtml',
       nodeContent: 'title',
       parentNodeSymbol: 'd-none'
@@ -30,6 +37,21 @@ export default class FamilyTree extends React.Component {
 
     $('.orgchart > table', $container).children('tr:nth-child(1), tr:nth-child(2), tr:nth-child(3)').hide();
     this.refreshConsigliereNodeLayout();
+
+    document.getElementById('boss_node').ondragover = this.handleDragOver;
+    document.getElementById('boss_node').ondrop = this.handleDrop;
+    document.getElementById('underboss_node').ondragover = this.handleDragOver;
+    document.getElementById('underboss_node').ondrop = this.handleDrop;
+    document.getElementById('consigliere_node').ondragover = this.handleDragOver;
+    document.getElementById('consigliere_node').ondrop = this.handleDrop;
+
+    $container
+      .on('mouseover', '.node .title', e => {
+        $(e.currentTarget).find('.overlay').removeClass('transparent');
+      })
+      .on('mouseout', '.node .title', e => {
+        $(e.currentTarget).find('.overlay').addClass('transparent');
+      });
 
     this.$container = $container;
   }
@@ -61,18 +83,40 @@ export default class FamilyTree extends React.Component {
   handleAddCapoClick = e => {
     const { $container } = this;
     const $underbossNode = $('#underboss_node');
+    const capoNodeId = `capo_node_${uuid()}`;
 
     if ($container.orgchart('getNodeState', $underbossNode, 'children').exist) {
       $container.orgchart('addSiblings', $underbossNode.closest('tr').siblings('.nodes').find('.node:first'), {
-        siblings: [{ innerHtml: defaultInnerHtml, title: 'Capo', relationship: '110' }]
+        siblings: [{ id: capoNodeId, innerHtml: defaultInnerHtml, title: 'Capo', className: 'capo-node', relationship: '110' }]
       });
     } else {
       $container.orgchart('addChildren', $underbossNode, {
-        children: [{ innerHtml: defaultInnerHtml, title: 'Capo', relationship: '100' }]
+        children: [{ id: capoNodeId, innerHtml: defaultInnerHtml, title: 'Capo', className: 'capo-node', relationship: '100' }]
       });
     }
 
+    document.getElementById(capoNodeId).ondragover = this.handleDragOver;
+    document.getElementById(capoNodeId).ondrop = this.handleDrop;
+
     this.refreshConsigliereNodeLayout();
+  }
+
+  handleDragOver = e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  }
+
+  handleDrop = e => {
+    e.preventDefault();
+
+    const { imagePaths } = window._SHARED_DATA;
+    let person = e.dataTransfer.getData('person');
+
+    if (person) {
+      person = JSON.parse(person);
+      $(e.currentTarget).find('.avatar').attr('src', person.photo_md_url || imagePaths['person-default-avatar.png']);
+      $(e.currentTarget).find('.overlay .info').text(person.full_name);
+    }
   }
 
   render() {

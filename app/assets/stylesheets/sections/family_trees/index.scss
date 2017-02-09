@@ -12,9 +12,58 @@ body[data-route="family_trees/index"] {
         background: none;
         border: 1px solid rgba(217, 83, 79, 0.8);
         height: 130px;
+        position: relative;
         width: 120px;
       }
+
+      .title .overlay {
+        left: 0;
+        top: 0;
+
+        .info {
+          bottom: 0;
+          font-size: 20px;
+          left: 0;
+          white-space: pre-wrap;
+        }
+      }
+
+      .content {
+        font-size: 12px;
+      }
     }
+  }
+
+  #boss_node .content {
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    font-weight: 700;
+    height: 30px;
+    padding-top: 7px;
+  }
+
+  #underboss_node .content {
+    font-family: 'Rokkitt', serif;
+    font-size: 16px;
+    font-weight: 500;
+    height: 23px;
+    padding-top: 2px;
+  }
+
+  #consigliere_node .content {
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 700;
+    height: 25px;
+    padding-top: 1px;
+  }
+
+  .capo-node .content {
+    color: darkblue;
+    font-size: 14px !important;
+    height: 22px;
+    padding-top: 1px;
   }
 
 }
