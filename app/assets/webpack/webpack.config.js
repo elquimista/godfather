@@ -23,6 +23,7 @@ const config = {
       'babel-polyfill',
       'jquery-ujs',
       'bootstrap',
+      'jquery-form/jquery.form',
     ],
     app: [
       './src/app',

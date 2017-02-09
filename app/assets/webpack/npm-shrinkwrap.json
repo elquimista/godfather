@@ -2437,6 +2437,11 @@
       "from": "jquery@>=3.1.1 <4.0.0",
       "resolved": "https://registry.npmjs.org/jquery/-/jquery-3.1.1.tgz"
     },
+    "jquery-form": {
+      "version": "3.50.0",
+      "from": "jquery-form@latest",
+      "resolved": "https://registry.npmjs.org/jquery-form/-/jquery-form-3.50.0.tgz"
+    },
     "jquery-ujs": {
       "version": "1.2.2",
       "from": "jquery-ujs@>=1.2.2 <2.0.0",

@@ -1,0 +1,5 @@
+= react_component 'FamilyTreeDashboard', props: { \
+    people: @people.map { |p| p.as_json.merge( \
+      'photo_sm_url' => cl_small_image_path(p.photo_url) \
+    )} \
+  }
