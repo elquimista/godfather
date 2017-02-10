@@ -7,5 +7,7 @@ class RoutesTest < ActionDispatch::IntegrationTest
 
   test 'people resources' do
     assert_generates people_path, controller: 'people', action: 'create'
+    assert_generates person_path(1), controller: 'people', action: 'update', id: 1
+    assert_generates person_path(1), controller: 'people', action: 'destroy', id: 1
   end
 end

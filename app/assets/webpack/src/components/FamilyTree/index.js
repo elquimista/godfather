@@ -26,7 +26,7 @@ export default class FamilyTree extends React.Component {
           id: 'boss_node', innerHtml: defaultInnerHtml, title: 'Don',
           children: [{ id: 'underboss_node', innerHtml: defaultInnerHtml, title: 'Underboss' }]
         }, {
-          id: 'consigliere_node', innerHtml: defaultInnerHtml, title: 'Consigliere'
+          id: 'consigliere_node', innerHtml: defaultInnerHtml, title: 'Consiglieri'
         }]
       },
       chartClass: 'family-tree-chart w-100 mt-2 pos-relative pt-0',

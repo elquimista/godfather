@@ -43,6 +43,7 @@
     "react-on-rails": "^6.4.2",
     "react-tap-event-plugin": "^2.0.1",
     "sass-loader": "^4.1.1",
+    "snapsvg": "^0.5.1",
     "style-loader": "^0.13.1",
     "uuid": "^3.0.1",
     "webpack": "^2.2.0"

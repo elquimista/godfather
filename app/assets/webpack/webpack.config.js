@@ -76,6 +76,9 @@ const config = {
       test: require.resolve('react'),
       loader: 'imports-loader?shim=es5-shim/es5-shim&sham=es5-shim/es5-sham',
     }, {
+      test: require.resolve('snapsvg'),
+      loader: 'imports-loader?this=>window,fix=>module.exports=0',
+    }, {
       test: /\.(js|jsx)$/,
       loader: 'babel-loader',
       exclude: /(node_modules|bower_components)/,

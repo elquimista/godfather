@@ -34,6 +34,13 @@ export default class PeopleList extends React.Component {
     }
   }
 
+  handlePersonDeletedEvent = person => {
+    let { people } = this.state;
+    const indexToDelete = people.findIndex(p => p.id === person.id);
+    people.splice(indexToDelete, 1);
+    this.setState({ people });
+  }
+
   render() {
     const { people } = this.state;
     const { routes } = window._SHARED_DATA;
@@ -42,7 +49,7 @@ export default class PeopleList extends React.Component {
       <div>
         <div>
           {people.map(person => (
-            <PersonItem key={uuid()} person={person} className="mt-2" />
+            <PersonItem key={uuid()} person={person} className="mt-2" onDelete={this.handlePersonDeletedEvent} />
           ))}
         </div>
         <button type="button" className="btn btn-sm btn-primary w-100 mt-3" role="button" data-toggle="modal" data-target="#add_profile_modal">Add Profile</button>

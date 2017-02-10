@@ -1,9 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  full_name: MyString
-  photo_url: MyString
-
-two:
-  full_name: MyString
-  photo_url: MyString
+don:
+  full_name: Vito Corleone
+  photo_url: https://fromprinttoscreen.files.wordpress.com/2016/02/don-vito.jpg

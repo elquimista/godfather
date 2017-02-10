@@ -1217,6 +1217,11 @@
       "from": "esutils@>=2.0.2 <3.0.0",
       "resolved": "https://registry.npmjs.org/esutils/-/esutils-2.0.2.tgz"
     },
+    "eve": {
+      "version": "0.5.1",
+      "from": "eve@>=0.5.1 <0.6.0",
+      "resolved": "https://registry.npmjs.org/eve/-/eve-0.5.1.tgz"
+    },
     "events": {
       "version": "1.1.1",
       "from": "events@>=1.0.0 <2.0.0",
@@ -3394,6 +3399,11 @@
       "version": "1.0.0",
       "from": "slash@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/slash/-/slash-1.0.0.tgz"
+    },
+    "snapsvg": {
+      "version": "0.5.1",
+      "from": "snapsvg@latest",
+      "resolved": "https://registry.npmjs.org/snapsvg/-/snapsvg-0.5.1.tgz"
     },
     "sntp": {
       "version": "1.0.9",
