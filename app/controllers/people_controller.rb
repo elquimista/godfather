@@ -28,7 +28,7 @@ class PeopleController < ApplicationController
   protected
 
   def person_params
-    params.require(:person).permit(:full_name)
+    params.require(:person).permit(:full_name, :status)
   end
 
   def find_person

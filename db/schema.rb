@@ -10,13 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170208202157) do
+ActiveRecord::Schema.define(version: 20170211005139) do
+
+  create_table "family_trees", force: :cascade do |t|
+    t.text     "raw_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "people", force: :cascade do |t|
     t.string   "full_name",  null: false
     t.string   "photo_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "status"
+    t.index ["status"], name: "index_people_on_status"
   end
 
 end

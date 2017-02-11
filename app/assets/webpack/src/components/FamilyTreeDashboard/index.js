@@ -7,10 +7,21 @@ import FamilyTree from 'components/FamilyTree';
 export default class FamilyTreeDashboard extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      people: props.people
+    };
+  }
+
+  handleProfileDroppedOnToFamilyTree = person => {
+    const { people } = this.state;
+    const indexToDelete = people.findIndex(p => p.id === person.id);
+    people.splice(indexToDelete, 1);
+    this.setState({ people });
   }
 
   render() {
-    const { people } = this.props;
+    const { familyTree } = this.props;
+    const { people } = this.state;
 
     return (
       <div className="row">
@@ -18,7 +29,7 @@ export default class FamilyTreeDashboard extends React.Component {
           <PeopleList people={people} />
         </div>
         <div className="col-22">
-          <FamilyTree />
+          <FamilyTree familyTree={familyTree} onProfileDropped={this.handleProfileDroppedOnToFamilyTree} />
         </div>
       </div>
     );

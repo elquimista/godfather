@@ -35,10 +35,17 @@ export default class PeopleList extends React.Component {
   }
 
   handlePersonDeletedEvent = person => {
-    let { people } = this.state;
+    const { people } = this.state;
     const indexToDelete = people.findIndex(p => p.id === person.id);
     people.splice(indexToDelete, 1);
     this.setState({ people });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { people } = nextProps;
+    if (people !== this.props.people) {
+      this.setState(people);
+    }
   }
 
   render() {

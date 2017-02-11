@@ -1,10 +1,17 @@
 class Person < ApplicationRecord
+  enum status: { free: 0, appointed: 1, dead: 2 }
+
   validates :full_name, presence: true
 
+  after_initialize :set_defaults, unless: :persisted?
   before_save :upload_image_to_cloudinary, if: 'photo_url_changed? && photo_url.present?'
   before_destroy :destroy_cloudinary_image, if: 'photo_url.present?'
 
   protected
+
+  def set_defaults
+    self.status ||= :free
+  end
 
   def upload_image_to_cloudinary
     if photo_url_was.present?
