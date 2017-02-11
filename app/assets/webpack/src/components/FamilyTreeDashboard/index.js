@@ -19,6 +19,16 @@ export default class FamilyTreeDashboard extends React.Component {
     this.setState({ people });
   }
 
+  handleProfileDismissed = async personId => {
+    const res = await $.ajax({
+      url: window._SHARED_DATA.routes.personPath(personId, { format: 'json' }),
+      method: 'get'
+    });
+    if (res.success) {
+      this.setState(ps => ({ people: ps.people.concat(res.person) }));
+    }
+  }
+
   render() {
     const { familyTree } = this.props;
     const { people } = this.state;
@@ -29,7 +39,11 @@ export default class FamilyTreeDashboard extends React.Component {
           <PeopleList people={people} />
         </div>
         <div className="col-22">
-          <FamilyTree familyTree={familyTree} onProfileDropped={this.handleProfileDroppedOnToFamilyTree} />
+          <FamilyTree
+            familyTree={familyTree}
+            onProfileDropped={this.handleProfileDroppedOnToFamilyTree}
+            onProfileDismissed={this.handleProfileDismissed}
+          />
         </div>
       </div>
     );

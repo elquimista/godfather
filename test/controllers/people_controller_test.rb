@@ -18,6 +18,13 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test '#show should render person data' do
+    person = people(:don)
+    get person_path(person, format: :json)
+    assert_response :success
+    assert_equal person.full_name, JSON.parse(@response.body)['person']['full_name']
+  end
+
   test '#update should render' do
     person = people(:don)
     uploaded_file = [fixture_file_upload('files/profile_photo.png', 'image/png'), ''].sample

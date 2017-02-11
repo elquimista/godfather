@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-  before_action :find_person, only: %i[update destroy]
+  before_action :find_person, only: %i[show update destroy]
 
   def create
     @person = Person.new(person_params)
@@ -10,6 +10,10 @@ class PeopleController < ApplicationController
         ''
       end
     @person.save
+    render :show
+  end
+
+  def show
   end
 
   def update
@@ -18,7 +22,7 @@ class PeopleController < ApplicationController
       @person.photo_url = params[:person][:photo_url].path
     end
     @person.save
-    render :create
+    render :show
   end
 
   def destroy

@@ -3,8 +3,9 @@
 import React from 'react';
 import uuid from 'uuid';
 
+const defaultAvatarUrl = 'http://placehold.it/118x128';
 const defaultInnerHtml =
-  '<img class="avatar" src="http://placehold.it/118x128" width="118" height="128">' +
+  `<img class="avatar" src="${defaultAvatarUrl}" width="118" height="128">` +
   '<div class="overlay pos-absolute w-100 h-100 transparent">' +
     '<div class="pos-absolute w-100 h-100" style="left: 0; top: 0; background-color: black; opacity: .7;"></div>' +
     '<p class="info pos-absolute w-100 p-1" style="line-height: 23px;"></p>' +
@@ -95,7 +96,6 @@ export default class FamilyTree extends React.Component {
     const $orgchart = $('.orgchart', this.$container);
     const $consigliereNode = $('#consigliere_node');
     const $vLineFromBossNode = $('#boss_node').closest('tr').next('.lines').find('.downLine:first');
-    const orgchartOffset = $orgchart.offset();
     const lineWidth = 120;
 
     if (!$consigliereNode.parent().hasClass('orgchart')) {
@@ -108,11 +108,11 @@ export default class FamilyTree extends React.Component {
     }
 
     $consigliereNode
-      .css('left', `${$vLineFromBossNode.offset().left - orgchartOffset.left + lineWidth}px`)
-      .css('top', `${$vLineFromBossNode.offset().top - orgchartOffset.top - 55}px`)
+      .css('left', `${$vLineFromBossNode.offset().left - $orgchart.offset().left + lineWidth}px`)
+      .css('top', `${$vLineFromBossNode.offset().top - $orgchart.offset().top - 55}px`)
       .next()
-      .css('left', `${$vLineFromBossNode.offset().left - orgchartOffset.left}px`)
-      .css('top', `${$vLineFromBossNode.offset().top - orgchartOffset.top + 20}px`);
+      .css('left', `${$vLineFromBossNode.offset().left - $orgchart.offset().left}px`)
+      .css('top', `${$vLineFromBossNode.offset().top - $orgchart.offset().top + 20}px`);
   }
 
   handleAddCapoClick = e => {
@@ -183,8 +183,33 @@ export default class FamilyTree extends React.Component {
     });
   }
 
+  handleDismissClick = e => {
+    const { treeData, state: { $selectedNode }, props: { onProfileDismissed } } = this;
+    const nodeData = getNodeData(treeData, $selectedNode.attr('id'));
+    const personId = nodeData.personId;
+    const $nodeInnerHtml = $(`<div>${nodeData.innerHtml}</div>`);
+
+    $nodeInnerHtml.find('.avatar').attr('src', defaultAvatarUrl);
+    $nodeInnerHtml.find('.overlay .info').text('');
+    nodeData.innerHtml = $nodeInnerHtml.html();
+    nodeData.personId = null;
+    $selectedNode.find('.avatar').attr('src', defaultAvatarUrl);
+    $selectedNode.find('.overlay .info').text('');
+
+    $.ajax({
+      url: window._SHARED_DATA.routes.personPath(personId, { format: 'json' }),
+      method: 'patch',
+      data: { person: { status: 'free' } }
+    });
+
+    onProfileDismissed && onProfileDismissed(personId);
+    this.saveFamilyTreeData();
+    this.setState({ $selectedNode });
+  }
+
   render() {
     const { bossNodeAdded, underbossNodeAdded, consigliereNodeAdded, $selectedNode } = this.state;
+    const dismissButtonEnabled = !!($selectedNode && $selectedNode.length > 0 && getNodeData(this.treeData, $selectedNode.attr('id')).personId);
 
     return (
       <div className={`d-flex justify-content-center p-3`}>
@@ -192,7 +217,7 @@ export default class FamilyTree extends React.Component {
           <div>
             <button type="button" role="button" className="btn btn-sm btn-outline-primary" onClick={this.handleAddCapoClick}>+ Capo</button>
             <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={true}>+ Soldier</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={$selectedNode === null || $selectedNode.length === 0}>Dismiss</button>
+            <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={!dismissButtonEnabled} onClick={this.handleDismissClick}>Dismiss</button>
           </div>
         </div>
       </div>

@@ -44,7 +44,7 @@ export default class PeopleList extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { people } = nextProps;
     if (people !== this.props.people) {
-      this.setState(people);
+      this.setState({ people });
     }
   }
 
