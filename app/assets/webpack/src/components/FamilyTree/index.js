@@ -139,7 +139,7 @@ export default class FamilyTree extends React.Component {
   }
 
   handleRemoveCapoClick = async e => {
-    if (confirm('Are you sure you want to remove this caporegime?')) {
+    if (confirm('Are you sure you want to remove this caporegime? (The profile will be dismissed and all soldiers under him will be dismissed and removed)')) {
       const { $container, treeData, state: { $selectedNode }, props: { onProfileDismissed } } = this;
       const underbossNodeData = getNodeData(treeData, 'underboss_node');
       const nodeData = getNodeData(treeData, $selectedNode.attr('id'));
@@ -150,10 +150,62 @@ export default class FamilyTree extends React.Component {
 
       if (nodeData.personId && onProfileDismissed) {
         await onProfileDismissed(nodeData.personId);
+        await this.submitProfileStatusUpdate(nodeData.personId, 'free');
+      }
+      if (Array.isArray(nodeData.children)) {
+        for (let child of nodeData.children) {
+          if (child.personId) {
+            onProfileDismissed && await onProfileDismissed(child.personId);
+            await this.submitProfileStatusUpdate(child.personId, 'free');
+          }
+        }
       }
       underbossNodeData.children.splice(indexToDelete, 1);
-      await this.saveFamilyTreeData();
-      this.submitProfileStatusUpdate(nodeData.personId, 'free');
+      this.saveFamilyTreeData();
+    }
+  }
+
+  handleAddSoldierClick = e => {
+    const { $container } = this;
+    const { $selectedNode: $capoNode } = this.state;
+    const capoNodeData = getNodeData(this.treeData, $capoNode.attr('id'));
+    const soldierNodeId = `soldier_node_${uuid()}`;
+    let soldierNodeData;
+
+    if ($container.orgchart('getNodeState', $capoNode, 'children').exist) {
+      soldierNodeData = { id: soldierNodeId, innerHtml: defaultInnerHtml, title: 'Soldier', className: 'soldier-node', relationship: '110' };
+      $container.orgchart('addSiblings', $capoNode.closest('tr').siblings('.nodes').find('.node:first'), {
+        siblings: [soldierNodeData]
+      });
+    } else {
+      soldierNodeData = { id: soldierNodeId, innerHtml: defaultInnerHtml, title: 'Soldier', className: 'soldier-node', relationship: '100' };
+      $container.orgchart('addChildren', $capoNode, { children: [soldierNodeData] });
+    }
+
+    capoNodeData.children = capoNodeData.children || [];
+    capoNodeData.children.push(soldierNodeData);
+    this.saveFamilyTreeData();
+    this.addDragDropEventHandlersToNodes(soldierNodeData);
+    this.refreshConsigliereNodeLayout();
+  }
+
+  handleRemoveSoldierClick = async e => {
+    if (confirm('Are you sure you want to remove this soldier? (The profile will be dismissed)')) {
+      const { $container, treeData, state: { $selectedNode }, props: { onProfileDismissed } } = this;
+      const $capoNode = $container.orgchart('getRelatedNodes', $selectedNode, 'parent');
+      const capoNodeData = getNodeData(treeData, $capoNode.attr('id'));
+      const soldierNodeData = getNodeData(treeData, $selectedNode.attr('id'));
+      const indexToDelete = capoNodeData.children.findIndex(child => child.id === soldierNodeData.id);
+
+      $container.orgchart('removeNodes', $selectedNode);
+      this.refreshConsigliereNodeLayout();
+
+      if (soldierNodeData.personId && onProfileDismissed) {
+        await onProfileDismissed(soldierNodeData.personId);
+        await this.submitProfileStatusUpdate(soldierNodeData.personId, 'free');
+      }
+      capoNodeData.children.splice(indexToDelete, 1);
+      this.saveFamilyTreeData();
     }
   }
 
@@ -241,19 +293,20 @@ export default class FamilyTree extends React.Component {
 
   render() {
     const { bossNodeAdded, underbossNodeAdded, consigliereNodeAdded, $selectedNode } = this.state;
-    const removeCapoButtonEnabled = !!($selectedNode && $selectedNode.length > 0 && $selectedNode.hasClass('capo-node'));
-    const dismissButtonEnabled = !!($selectedNode && $selectedNode.length > 0 && getNodeData(this.treeData, $selectedNode.attr('id')).personId);
+    const nodeSelected = !!($selectedNode && $selectedNode.length > 0 && getNodeData(this.treeData, $selectedNode.attr('id')).personId);
+    const capoNodeSelected = !!($selectedNode && $selectedNode.length > 0 && $selectedNode.hasClass('capo-node'));
+    const soldierNodeSelected = !!($selectedNode && $selectedNode.length > 0 && $selectedNode.hasClass('soldier-node'));
 
     return (
       <div className={`d-flex justify-content-center p-3`}>
         <div id="family_tree_container">
           <div>
             <button type="button" role="button" className="btn btn-sm btn-outline-primary" onClick={this.handleAddCapoClick}>+ Capo</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={!removeCapoButtonEnabled} onClick={this.handleRemoveCapoClick}>– Capo</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={true}>+ Soldier</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={true}>– Soldier</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-warning ml-2" disabled={!dismissButtonEnabled} onClick={this.handleDismissClick}>Dismiss</button>
-            <button type="button" role="button" className="btn btn-sm btn-danger ml-2" disabled={!dismissButtonEnabled} onClick={this.handleKiaClick}>K.I.A.</button>
+            <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={!capoNodeSelected} onClick={this.handleRemoveCapoClick}>– Capo</button>
+            <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={!capoNodeSelected} onClick={this.handleAddSoldierClick}>+ Soldier</button>
+            <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={!soldierNodeSelected} onClick={this.handleRemoveSoldierClick}>– Soldier</button>
+            <button type="button" role="button" className="btn btn-sm btn-outline-warning ml-2" disabled={!nodeSelected} onClick={this.handleDismissClick}>Dismiss</button>
+            <button type="button" role="button" className="btn btn-sm btn-danger ml-2" disabled={!nodeSelected} onClick={this.handleKiaClick}>K.I.A.</button>
           </div>
         </div>
       </div>
