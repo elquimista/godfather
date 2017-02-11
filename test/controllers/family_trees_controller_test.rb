@@ -1,8 +1,12 @@
 require 'test_helper'
 
 class FamilyTreesControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    sign_in users(:one)
+  end
+
   test '#index should render' do
-    get root_path
+    get family_trees_path
     assert_response :success
   end
 

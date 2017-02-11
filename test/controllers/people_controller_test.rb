@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class PeopleControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    sign_in users(:one)
+  end
+
   test '#create should render' do
     uploaded_file = [fixture_file_upload('files/profile_photo.png', 'image/png'), ''].sample
     person_params = { full_name: Faker::Internet.name, photo_url: uploaded_file }

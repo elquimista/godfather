@@ -293,6 +293,7 @@ export default class FamilyTree extends React.Component {
 
   render() {
     const { bossNodeAdded, underbossNodeAdded, consigliereNodeAdded, $selectedNode } = this.state;
+    const { routes } = window._SHARED_DATA;
     const nodeSelected = !!($selectedNode && $selectedNode.length > 0 && getNodeData(this.treeData, $selectedNode.attr('id')).personId);
     const capoNodeSelected = !!($selectedNode && $selectedNode.length > 0 && $selectedNode.hasClass('capo-node'));
     const soldierNodeSelected = !!($selectedNode && $selectedNode.length > 0 && $selectedNode.hasClass('soldier-node'));
@@ -300,13 +301,18 @@ export default class FamilyTree extends React.Component {
     return (
       <div className={`d-flex justify-content-center p-3`}>
         <div id="family_tree_container">
-          <div>
-            <button type="button" role="button" className="btn btn-sm btn-outline-primary" onClick={this.handleAddCapoClick}>+ Capo</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={!capoNodeSelected} onClick={this.handleRemoveCapoClick}>– Capo</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={!capoNodeSelected} onClick={this.handleAddSoldierClick}>+ Soldier</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={!soldierNodeSelected} onClick={this.handleRemoveSoldierClick}>– Soldier</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-warning ml-2" disabled={!nodeSelected} onClick={this.handleDismissClick}>Dismiss</button>
-            <button type="button" role="button" className="btn btn-sm btn-danger ml-2" disabled={!nodeSelected} onClick={this.handleKiaClick}>K.I.A.</button>
+          <div className="d-flex justify-content-between">
+            <div>
+              <button type="button" role="button" className="btn btn-sm btn-outline-primary" onClick={this.handleAddCapoClick}>+ Capo</button>
+              <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={!capoNodeSelected} onClick={this.handleRemoveCapoClick}>– Capo</button>
+              <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={!capoNodeSelected} onClick={this.handleAddSoldierClick}>+ Soldier</button>
+              <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={!soldierNodeSelected} onClick={this.handleRemoveSoldierClick}>– Soldier</button>
+              <button type="button" role="button" className="btn btn-sm btn-outline-warning ml-2" disabled={!nodeSelected} onClick={this.handleDismissClick}>Dismiss</button>
+              <button type="button" role="button" className="btn btn-sm btn-danger ml-2" disabled={!nodeSelected} onClick={this.handleKiaClick}>K.I.A.</button>
+            </div>
+            <div>
+              <a href={routes.destroyUserSessionPath()} className="btn btn-sm btn-outline-primary" role="button" data-method="delete">Sign Out</a>
+            </div>
           </div>
         </div>
       </div>

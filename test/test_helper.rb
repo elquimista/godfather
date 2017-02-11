@@ -22,7 +22,7 @@ Capybara.configure do |config|
 end
 
 class ActionDispatch::IntegrationTest
-  # include Devise::Test::IntegrationHelpers
+  include Devise::Test::IntegrationHelpers
   include Capybara::DSL
   include Capybara::Assertions
 
