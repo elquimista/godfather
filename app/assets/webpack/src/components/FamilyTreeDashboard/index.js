@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PeopleList from 'components/PeopleList';
-import DeadsList from 'components/DeadsList';
+import DeceasedList from 'components/DeceasedList';
 import FamilyTree from 'components/FamilyTree';
 import style from './style.scss';
 
@@ -76,7 +76,7 @@ export default class FamilyTreeDashboard extends React.Component {
           />
         </div>
         <div className={`px--15 ${style.peopleListWrapper}`}>
-          <DeadsList people={deads} onPersonRevived={this.handlePersonRevived} />
+          <DeceasedList people={deads} onPersonRevived={this.handlePersonRevived} />
         </div>
       </div>
     );

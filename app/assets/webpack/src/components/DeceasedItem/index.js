@@ -5,7 +5,7 @@ import uuid from 'uuid';
 import HaloMenu from './_HaloMenu';
 import style from './style.scss';
 
-export default class DeadPersonItem extends React.Component {
+export default class DeceasedItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -2,10 +2,10 @@
 
 import React from 'react';
 import uuid from 'uuid';
-import DeadPersonItem from 'components/DeadPersonItem';
+import DeceasedItem from 'components/DeceasedItem';
 import style from './style.scss';
 
-export default class DeadsList extends React.Component {
+export default class DeceasedList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +39,7 @@ export default class DeadsList extends React.Component {
       <div>
         <div className={`${style.peopleWrapper}`}>
           {people.map(person => (
-            <DeadPersonItem
+            <DeceasedItem
               key={uuid()}
               person={person}
               className="mt-2"
