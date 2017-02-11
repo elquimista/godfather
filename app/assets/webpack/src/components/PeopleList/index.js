@@ -3,6 +3,7 @@
 import React from 'react';
 import uuid from 'uuid';
 import PersonItem from 'components/PersonItem';
+import style from './style.scss';
 
 export default class PeopleList extends React.Component {
   constructor(props) {
@@ -59,7 +60,7 @@ export default class PeopleList extends React.Component {
 
     return (
       <div>
-        <div>
+        <div className={`${style.peopleWrapper}`}>
           {people.map(person => (
             <PersonItem
               key={uuid()}

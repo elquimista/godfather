@@ -4,6 +4,7 @@ import React from 'react';
 import PeopleList from 'components/PeopleList';
 import DeadsList from 'components/DeadsList';
 import FamilyTree from 'components/FamilyTree';
+import style from './style.scss';
 
 export default class FamilyTreeDashboard extends React.Component {
   constructor(props) {
@@ -62,11 +63,11 @@ export default class FamilyTreeDashboard extends React.Component {
     const { people, deads } = this.state;
 
     return (
-      <div className="row">
-        <div className="col-2">
+      <div className="row justify-content-between">
+        <div className={`px--15 ${style.peopleListWrapper}`}>
           <PeopleList people={people} onPersonDead={this.handlePersonDead} />
         </div>
-        <div className="col-20">
+        <div>
           <FamilyTree
             familyTree={familyTree}
             onProfileDropped={this.handleProfileDroppedOnToFamilyTree}
@@ -74,7 +75,7 @@ export default class FamilyTreeDashboard extends React.Component {
             onKIA={this.handleKiaInDuty}
           />
         </div>
-        <div className="col-2">
+        <div className={`px--15 ${style.peopleListWrapper}`}>
           <DeadsList people={deads} onPersonRevived={this.handlePersonRevived} />
         </div>
       </div>

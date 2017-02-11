@@ -10,3 +10,14 @@
     color: $white;
   }
 }
+
+// nanoscroller
+.nano {
+  > .nano-pane {
+    width: 6px;
+  }
+
+  > .nano-pane > .nano-slider {
+    background-color: transparentize($blue, 0.3);
+  }
+}

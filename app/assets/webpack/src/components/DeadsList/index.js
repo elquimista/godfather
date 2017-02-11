@@ -3,6 +3,7 @@
 import React from 'react';
 import uuid from 'uuid';
 import DeadPersonItem from 'components/DeadPersonItem';
+import style from './style.scss';
 
 export default class DeadsList extends React.Component {
   constructor(props) {
@@ -36,15 +37,17 @@ export default class DeadsList extends React.Component {
 
     return (
       <div>
-        {people.map(person => (
-          <DeadPersonItem
-            key={uuid()}
-            person={person}
-            className="mt-2"
-            onDelete={this.handlePersonDeletedEvent}
-            onRevive={this.handlePersonRevivedEvent}
-          />
-        ))}
+        <div className={`${style.peopleWrapper}`}>
+          {people.map(person => (
+            <DeadPersonItem
+              key={uuid()}
+              person={person}
+              className="mt-2"
+              onDelete={this.handlePersonDeletedEvent}
+              onRevive={this.handlePersonRevivedEvent}
+            />
+          ))}
+        </div>
       </div>
     );
   }
