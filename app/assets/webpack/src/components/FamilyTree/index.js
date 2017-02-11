@@ -138,7 +138,7 @@ export default class FamilyTree extends React.Component {
     this.refreshConsigliereNodeLayout();
   }
 
-  handleRemoveCapoClick = e => {
+  handleRemoveCapoClick = async e => {
     if (confirm('Are you sure you want to remove this caporegime?')) {
       const { $container, treeData, state: { $selectedNode }, props: { onProfileDismissed } } = this;
       const underbossNodeData = getNodeData(treeData, 'underboss_node');
@@ -146,13 +146,14 @@ export default class FamilyTree extends React.Component {
       const indexToDelete = underbossNodeData.children.findIndex(child => child.id === nodeData.id);
 
       $container.orgchart('removeNodes', $selectedNode);
+      this.refreshConsigliereNodeLayout();
+
       if (nodeData.personId && onProfileDismissed) {
-        onProfileDismissed(nodeData.personId);
+        await onProfileDismissed(nodeData.personId);
       }
       underbossNodeData.children.splice(indexToDelete, 1);
-      this.saveFamilyTreeData();
+      await this.saveFamilyTreeData();
       this.submitProfileStatusUpdate(nodeData.personId, 'free');
-      this.refreshConsigliereNodeLayout();
     }
   }
 
@@ -161,7 +162,7 @@ export default class FamilyTree extends React.Component {
     e.dataTransfer.dropEffect = 'copy';
   }
 
-  handleDrop = e => {
+  handleDrop = async e => {
     e.preventDefault();
 
     let person = e.dataTransfer.getData('person');
@@ -184,13 +185,27 @@ export default class FamilyTree extends React.Component {
       $targetEl.find('.overlay .info').text(person.full_name);
 
       onProfileDropped && onProfileDropped(person);
-      this.saveFamilyTreeData();
+      await this.saveFamilyTreeData();
       this.submitProfileStatusUpdate(person.id, 'appointed');
     }
   }
 
-  handleDismissClick = e => {
-    const { treeData, state: { $selectedNode }, props: { onProfileDismissed } } = this;
+  handleDismissClick = async e => {
+    const { onProfileDismissed } = this.props;
+    const personId = await this.dismissProfile();
+    this.submitProfileStatusUpdate(personId, 'free');
+    onProfileDismissed && onProfileDismissed(personId);
+  }
+
+  handleKiaClick = async e => {
+    const { onKIA } = this.props;
+    const personId = await this.dismissProfile();
+    await this.submitProfileStatusUpdate(personId, 'dead');
+    onKIA && onKIA(personId);
+  }
+
+  async dismissProfile() {
+    const { treeData, state: { $selectedNode } } = this;
     const nodeData = getNodeData(treeData, $selectedNode.attr('id'));
     const personId = nodeData.personId;
     const $nodeInnerHtml = $(`<div>${nodeData.innerHtml}</div>`);
@@ -202,14 +217,14 @@ export default class FamilyTree extends React.Component {
     $selectedNode.find('.avatar').attr('src', defaultAvatarUrl);
     $selectedNode.find('.overlay .info').text('');
 
-    onProfileDismissed && onProfileDismissed(personId);
-    this.saveFamilyTreeData();
-    this.submitProfileStatusUpdate(personId, 'free');
+    await this.saveFamilyTreeData();
     this.setState({ $selectedNode });
+
+    return personId;
   }
 
   saveFamilyTreeData = () => {
-    $.ajax({
+    return $.ajax({
       url: window._SHARED_DATA.routes.familyTreePath(this.props.familyTree.id, { format: 'json' }),
       method: 'patch',
       data: { family_tree: { raw_data: JSON.stringify(this.treeData) } }
@@ -217,7 +232,7 @@ export default class FamilyTree extends React.Component {
   }
 
   submitProfileStatusUpdate(personId, status) {
-    $.ajax({
+    return $.ajax({
       url: window._SHARED_DATA.routes.personPath(personId, { format: 'json' }),
       method: 'patch',
       data: { person: { status: status } }
@@ -226,8 +241,8 @@ export default class FamilyTree extends React.Component {
 
   render() {
     const { bossNodeAdded, underbossNodeAdded, consigliereNodeAdded, $selectedNode } = this.state;
-    const dismissButtonEnabled = !!($selectedNode && $selectedNode.length > 0 && getNodeData(this.treeData, $selectedNode.attr('id')).personId);
     const removeCapoButtonEnabled = !!($selectedNode && $selectedNode.length > 0 && $selectedNode.hasClass('capo-node'));
+    const dismissButtonEnabled = !!($selectedNode && $selectedNode.length > 0 && getNodeData(this.treeData, $selectedNode.attr('id')).personId);
 
     return (
       <div className={`d-flex justify-content-center p-3`}>
@@ -238,6 +253,7 @@ export default class FamilyTree extends React.Component {
             <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={true}>+ Soldier</button>
             <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={true}>– Soldier</button>
             <button type="button" role="button" className="btn btn-sm btn-outline-warning ml-2" disabled={!dismissButtonEnabled} onClick={this.handleDismissClick}>Dismiss</button>
+            <button type="button" role="button" className="btn btn-sm btn-danger ml-2" disabled={!dismissButtonEnabled} onClick={this.handleKiaClick}>K.I.A.</button>
           </div>
         </div>
       </div>

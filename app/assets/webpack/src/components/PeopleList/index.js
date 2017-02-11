@@ -41,6 +41,11 @@ export default class PeopleList extends React.Component {
     this.setState({ people });
   }
 
+  handlePersonDeadEvent = person => {
+    const { onPersonDead } = this.props;
+    onPersonDead && onPersonDead(person);
+  }
+
   componentWillReceiveProps(nextProps) {
     const { people } = nextProps;
     if (people !== this.props.people) {
@@ -56,7 +61,13 @@ export default class PeopleList extends React.Component {
       <div>
         <div>
           {people.map(person => (
-            <PersonItem key={uuid()} person={person} className="mt-2" onDelete={this.handlePersonDeletedEvent} />
+            <PersonItem
+              key={uuid()}
+              person={person}
+              className="mt-2"
+              onDelete={this.handlePersonDeletedEvent}
+              onDead={this.handlePersonDeadEvent}
+            />
           ))}
         </div>
         <button type="button" className="btn btn-sm btn-primary w-100 mt-3" role="button" data-toggle="modal" data-target="#add_profile_modal">Add Profile</button>

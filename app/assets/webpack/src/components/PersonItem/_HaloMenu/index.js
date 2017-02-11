@@ -4,7 +4,7 @@ import React from 'react';
 import uuid from 'uuid';
 import Snap from 'snapsvg';
 
-export default class HaloMenu extends React.Component {
+export default class _HaloMenuForPersonItem extends React.Component {
   constructor(props) {
     super(props);
 

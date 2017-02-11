@@ -5,7 +5,7 @@ import uuid from 'uuid';
 import HaloMenu from './_HaloMenu';
 import style from './style.scss';
 
-export default class PersonItem extends React.Component {
+export default class DeadPersonItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +33,6 @@ export default class PersonItem extends React.Component {
     $form.ajaxForm({ success: this.handlePersonUpdatedEvent });
   }
 
-  handleDragStart = e => e.dataTransfer.setData('person', JSON.stringify(this.state.person));
   handleFullNameChange = e => this.setState({ personFullName: e.target.value });
 
   handleEditClick = e => {
@@ -59,18 +58,18 @@ export default class PersonItem extends React.Component {
     }
   }
 
-  handleDeadClick = e => {
+  handleReviveClick = e => {
     e.preventDefault();
 
     const { person } = this.state;
-    const { onDead } = this.props;
+    const { onRevive } = this.props;
 
     $.ajax({
       url: window._SHARED_DATA.routes.personPath(person.id, { format: 'json' }),
       method: 'patch',
-      data: { person: { status: 'dead' } }
+      data: { person: { status: 'free' } }
     });
-    onDead && onDead(person);
+    onRevive && onRevive(person);
   }
 
   handlePersonUpdatedEvent = res => {
@@ -88,12 +87,12 @@ export default class PersonItem extends React.Component {
     const { className } = this.props;
     const { person, showHaloMenu, personFullName } = this.state;
     const { imagePaths, routes } = window._SHARED_DATA;
-    const haloMenuHandlers = [this.handleDeadClick, this.handleDeleteClick, this.handleEditClick];
+    const haloMenuHandlers = [this.handleReviveClick, this.handleDeleteClick, this.handleEditClick];
     const fullNameId = `person_full_name_${uuid()}`;
     const photoUrlId = `person_photo_url_${uuid()}`;
 
     return (
-      <div className={`card pos-relative ${style.wrapper} ${className}`} draggable={true} onDragStart={this.handleDragStart} ref={e => this.container = e}>
+      <div className={`card pos-relative ${style.wrapper} ${className}`} ref={e => this.container = e}>
         <img className={`card-img-top ${style.avatar}`} src={person.photo_sm_url || imagePaths['person-default-avatar.png']} alt={person.full_name} ref={e => this.imgAvatar = e} />
         <div className="card-block p-2">
           <h4 className={`card-title text-center m-0 ${style.name}`}>{person.full_name}</h4>

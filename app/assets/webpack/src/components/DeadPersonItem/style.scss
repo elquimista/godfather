@@ -1,0 +1,17 @@
+:local
+.wrapper {
+  .avatar {
+    filter: sepia(10%) grayscale(100%) brightness(120%) contrast(150%) drop-shadow(2px 2px 2px gray) opacity(60%);
+    max-width: 100%;
+  }
+
+  .name {
+    font-size: 14px;
+  }
+
+  .halo-menu {
+    left: -19px;
+    top: 51px;
+    width: 132px;
+  }
+}
