@@ -1,6 +1,6 @@
 class FamilyTreesController < ApplicationController
   def index
-    @people = Person.free
+    @people = Person.free.order(created_at: :asc)
     @family_tree = FamilyTree.first_or_create
   end
 

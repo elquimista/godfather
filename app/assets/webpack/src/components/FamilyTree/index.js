@@ -138,6 +138,24 @@ export default class FamilyTree extends React.Component {
     this.refreshConsigliereNodeLayout();
   }
 
+  handleRemoveCapoClick = e => {
+    if (confirm('Are you sure you want to remove this caporegime?')) {
+      const { $container, treeData, state: { $selectedNode }, props: { onProfileDismissed } } = this;
+      const underbossNodeData = getNodeData(treeData, 'underboss_node');
+      const nodeData = getNodeData(treeData, $selectedNode.attr('id'));
+      const indexToDelete = underbossNodeData.children.findIndex(child => child.id === nodeData.id);
+
+      $container.orgchart('removeNodes', $selectedNode);
+      if (nodeData.personId && onProfileDismissed) {
+        onProfileDismissed(nodeData.personId);
+      }
+      underbossNodeData.children.splice(indexToDelete, 1);
+      this.saveFamilyTreeData();
+      this.submitProfileStatusUpdate(nodeData.personId, 'free');
+      this.refreshConsigliereNodeLayout();
+    }
+  }
+
   handleDragOver = e => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
@@ -165,22 +183,10 @@ export default class FamilyTree extends React.Component {
       $targetEl.find('.avatar').attr('src', person.photo_md_url || imagePaths['person-default-avatar.png']);
       $targetEl.find('.overlay .info').text(person.full_name);
 
-      $.ajax({
-        url: routes.personPath(person.id, { format: 'json' }),
-        method: 'patch',
-        data: { person: { status: 'appointed' } }
-      });
       onProfileDropped && onProfileDropped(person);
       this.saveFamilyTreeData();
+      this.submitProfileStatusUpdate(person.id, 'appointed');
     }
-  }
-
-  saveFamilyTreeData = () => {
-    $.ajax({
-      url: window._SHARED_DATA.routes.familyTreePath(this.props.familyTree.id, { format: 'json' }),
-      method: 'patch',
-      data: { family_tree: { raw_data: JSON.stringify(this.treeData) } }
-    });
   }
 
   handleDismissClick = e => {
@@ -196,28 +202,42 @@ export default class FamilyTree extends React.Component {
     $selectedNode.find('.avatar').attr('src', defaultAvatarUrl);
     $selectedNode.find('.overlay .info').text('');
 
+    onProfileDismissed && onProfileDismissed(personId);
+    this.saveFamilyTreeData();
+    this.submitProfileStatusUpdate(personId, 'free');
+    this.setState({ $selectedNode });
+  }
+
+  saveFamilyTreeData = () => {
+    $.ajax({
+      url: window._SHARED_DATA.routes.familyTreePath(this.props.familyTree.id, { format: 'json' }),
+      method: 'patch',
+      data: { family_tree: { raw_data: JSON.stringify(this.treeData) } }
+    });
+  }
+
+  submitProfileStatusUpdate(personId, status) {
     $.ajax({
       url: window._SHARED_DATA.routes.personPath(personId, { format: 'json' }),
       method: 'patch',
-      data: { person: { status: 'free' } }
+      data: { person: { status: status } }
     });
-
-    onProfileDismissed && onProfileDismissed(personId);
-    this.saveFamilyTreeData();
-    this.setState({ $selectedNode });
   }
 
   render() {
     const { bossNodeAdded, underbossNodeAdded, consigliereNodeAdded, $selectedNode } = this.state;
     const dismissButtonEnabled = !!($selectedNode && $selectedNode.length > 0 && getNodeData(this.treeData, $selectedNode.attr('id')).personId);
+    const removeCapoButtonEnabled = !!($selectedNode && $selectedNode.length > 0 && $selectedNode.hasClass('capo-node'));
 
     return (
       <div className={`d-flex justify-content-center p-3`}>
         <div id="family_tree_container">
           <div>
             <button type="button" role="button" className="btn btn-sm btn-outline-primary" onClick={this.handleAddCapoClick}>+ Capo</button>
+            <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={!removeCapoButtonEnabled} onClick={this.handleRemoveCapoClick}>– Capo</button>
             <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={true}>+ Soldier</button>
-            <button type="button" role="button" className="btn btn-sm btn-outline-primary ml-2" disabled={!dismissButtonEnabled} onClick={this.handleDismissClick}>Dismiss</button>
+            <button type="button" role="button" className="btn btn-sm btn-outline-danger ml-2" disabled={true}>– Soldier</button>
+            <button type="button" role="button" className="btn btn-sm btn-outline-warning ml-2" disabled={!dismissButtonEnabled} onClick={this.handleDismissClick}>Dismiss</button>
           </div>
         </div>
       </div>
